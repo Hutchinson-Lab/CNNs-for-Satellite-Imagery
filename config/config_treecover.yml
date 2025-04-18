@@ -1,0 +1,46 @@
+---
+model:
+  arch: 'resnet18'
+  blocks: 4  # how many residual blocks to keep [0,4]
+  pretrained: false
+  freeze_conv: false  # if true, only train final fully connected layer
+  mode: 'regression'
+  task: 'treecover'
+  name: 'treecover_resnet_4blocks'
+  model_fn: '' # path to .ckpt to resume training a model or for evaluating a trained model
+
+training:
+  lr: 1e-4
+  weight_decay: 0.1
+  beta1: 0.9  # default is 0.9
+  lr_gamma:  # gamma for learning rate scheduler (decay rate factor), if empty: no scheduler
+  epochs_start: 0
+  epochs_end: 3000
+  batch_size: 50
+  shuffle: true
+  num_workers: 1
+  train: true
+  val: true  # evaluate validation set
+  test: false  # evaluate test set
+  save_models: false  # save model params every 5 epochs
+
+data:
+  img_type: 'rgb'  # ['rgb', 'landsat']
+  img_size: 128  # glcm: 11, ucMerced: 240,
+  img_ext: 'png'
+  bands: 3  # 1: grayscale, 3: rgb, -1: grayscale for ResNet
+  num_classes: 1
+  labels: '/labels/treecover_CONTUS_16_640_UAR_100000_0_0.10data.npy'
+
+eval:
+  mse: true
+  mae: true
+  r2: true
+  acc: false
+  pr: false
+
+# preprocessing code, usually only needed to format images
+preprocessing:
+  calc_channel_means: false
+  calc_channel_means_stdDevs: false
+  split: 'train'  # split to calc means ['all' 'train', 'test', 'val']

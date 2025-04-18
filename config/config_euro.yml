@@ -1,0 +1,48 @@
+---
+model:
+  arch: 'resnet18'
+  blocks: 4  # how many residual blocks to keep [0,4]
+  pretrained: false
+  freeze_conv: false  # if true, only train final fully connected layer
+  mode: 'classification'
+  task: 'eurosat'
+  name: 'eurosat_resnet_4blocks'  # name of training run/model
+  model_fn: '' # path to .ckpt to resume training a model or for evaluating a trained model
+
+training:
+  lr: 1e-5
+  weight_decay: 0.01
+  beta1: 0.9  # default is 0.9
+  lr_gamma:  # gamma for learning rate scheduler (decay rate factor), if empty: no scheduler
+  epochs_start: 0
+  epochs_end: 2000
+  batch_size: 64
+  shuffle: true
+  num_workers: 4
+  train: true
+  val: true  # evaluate validation set
+  test: false  # evaluate test set
+  save_models: false  # save model params every 5 epochs
+
+data:
+  img_type: 'sentinel-2'  # ['rgb', 'landsat', 'naip', 'sentinel-2']
+  img_size: 64  # glcm: 11, ucMerced: 240,
+  img_ext: 'npy'
+  bands: 13  # 1: grayscale, 3: rgb, -1: grayscale for ResNet
+  num_classes: 10
+  labels: '/labels/euroSAT_labels.npy'
+
+eval:
+  mse: false
+  mae: false
+  r2: false
+  acc: true
+  pr: true
+
+# preprocessing code, usually only needed to format images
+preprocessing:
+  calc_channel_means: false
+  calc_channel_means_stdDevs: false
+  split: 'train'  # split to calc means ['all' 'train', 'test', 'val']
+
+
