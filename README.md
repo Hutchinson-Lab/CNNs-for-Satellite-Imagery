@@ -13,7 +13,7 @@ Satellite imagery is highly beneficial for analyzing and monitoring Earth-relate
 [Forest cover, Nighttime lights, Elevation](https://www.nature.com/articles/s41467-021-24638-z)
 
 ## Instructions
-Use the config files to specify run parameters. Example config files can be found in the config directory. Paper results were achieved with the settings specified in the config files. 
+Use the config files to specify run parameters and paths.py to specify the data directories. Example config files can be found in the config directory. Paper results were achieved with the settings specified in the config files. 
 
 To train a model use: ```python run.py --c <path_to_config_file>```
 
