@@ -7,9 +7,6 @@ import os
 import numpy as np
 import random
 import pandas as pd
-#import matplotlib.pyplot as plt
-#import imageio
-#from PIL import Image, ImageOps, ImageEnhance
 
 
 class SatelliteDataset(Dataset):
