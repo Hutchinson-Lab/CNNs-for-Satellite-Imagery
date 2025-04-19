@@ -94,51 +94,6 @@ def load_tif(img_fn, bands, bands_only=False, is_npy=True, normalize=False):
     return img, img.min(), img.max()
 
 
-'''
-def tif2npy(tif_dir, npy_dir, img_type, bands):
-    
-    count = 0
-    min = 10000
-    max = 0
-
-    for img in os.listdir(tif_dir):
-        img_name = img.split('.tif')[0]
-        print(img_name)
-        if img_type == 'nlcd':
-            img = load_nlcd(tif_dir + img)
-        elif img_type == 'rgb':
-            img = load_rgb(tif_dir + img, bands, bands_only=True, is_npy=False)
-        else:
-            #img = load_tif(tif_dir + img, bands, bands_only=True, is_npy=False)
-            img, img_min, img_max = load_tif(tif_dir + img, bands, bands_only=True, is_npy=False)
-        if (img.shape[0] >= 48 and img.shape[1] >= 48):
-            np.save(os.path.join(npy_dir, img_name + '.npy'), img)
-
-        count += 1
-        if img_min < min: min = img_min
-        if img_max > max: max = img_max
-    print(f'Saved  {str(count)} images to {npy_dir}')
-    print(f'Overall min: {min}')
-    print(f'Overall max: {max}')
-'''
-'''
-
-# clip images, centered at middle of image
-def clip_extent(npy, imgs_to_clip, extent):
-    if npy:
-        img_names = glob.glob(imgs_to_clip + "*.npy")
-    else:
-        img_names = glob.glob(imgs_to_clip + "*.tif")
-
-    # Clip and save images
-    clip_img(img_names, bands, patch_size=extent, patch_per_img=1,  # patch size 200 = 2km x 2km
-             centered=True, save=True, verbose=True, npy=npy)
-
-    #print('Finished clipping images')
-
-'''
-
-
 def calc_channel_means(img_type, split, paths):
     print(f'\n\nCalculating channel means for {split}')
 
