@@ -17,15 +17,6 @@ import pandas as pd
 import cv2
 
 
-'''def sample_patch(img_shape, patch_radius):
-    w_padded, h_padded, c = img_shape
-    w = w_padded - 2 * patch_radius
-    h = h_padded - 2 * patch_radius
-    xa = np.random.randint(0, w) + patch_radius
-    ya = np.random.randint(0, h) + patch_radius
-    return xa, ya
-'''
-
 def get_channel_mean_stdDev (dataloader, bands):
     means, stdDevs = None, None
     names = []
@@ -45,74 +36,6 @@ def get_channel_mean_stdDev (dataloader, bands):
     return means, stdDevs
 
 
-'''def get_features_mean_stdDev (dataloader, bands):
-    means, stdDevs = None, None
-    names, labels = [], []
-    for img, label, id in dataloader:
-        id, label = id[0], label[0].item()
-        print(id)
-        img = img.reshape(img.shape[0], bands, -1)  # flatten img w & h (maintain batch size and channels)
-        if means is None:
-            means = torch.mean(img, dim=2)*255  # reduce over batch size and img pixels (take means over channels)
-        else:
-            means = torch.vstack((means, torch.mean(img, dim=2)*255))
-        if stdDevs is None:
-            stdDevs = torch.std(img, dim=2)*255  # reduce over batch size and img pixels (take means over channels)
-        else:
-            stdDevs = torch.vstack((stdDevs, torch.std(img, dim=2)*255))
-        names.append(id)
-        labels.append(label)
-
-    return means, stdDevs, names, labels
-'''
-
-'''
-def clip_img(img_names, bands=1, patch_size=50, patch_per_img=1, centered=True, save=True, verbose=False, npy=True):
-    """
-    If centered is True, all patches extracted from the img will be replicates of the same tile
-    centered in the img. I.e. patch_per_img should be 1.
-    """
-    print("Clipping images")
-
-    for k in range(len(img_names)):
-        img_name = img_names[k]
-        name = os.path.basename(img_name).split("_")[:-1]
-        if verbose:
-            print('_'.join(name))
-        patch_radius = patch_size // 2
-        if (bands == 1):
-            img = load_nlcd(img_name, bands, bands_only=False)
-        else:
-            img = load_tif(img_name, bands, bands_only=False, is_npy=npy)
-        img_shape = img.shape
-        for i in range(patch_per_img):
-            if centered:
-                # calculate center pixel coords of tif
-                if (bands == 1):
-                    w_padded, h_padded = img_shape
-                else:
-                    w_padded, h_padded, c = img_shape
-                xa, ya = math.floor(w_padded/2), math.floor(h_padded/2)
-            else:
-                xa, ya = sample_patch(img_shape, patch_radius)
-            patch = extract_patch(img, xa, ya, patch_radius, bands)
-            if patch is not None:
-                if k == 0:
-                    print("Clipping images from " + str(img_shape) + " to " + str(patch.shape))
-                    sleep(5)
-                    if not os.path.exists(paths.clipped_imgs):
-                        os.makedirs(paths.clipped_imgs)
-                if npy:
-                    name = '_'.join(name) + ".npy"  # *30 for Landsat (30m/pixel)
-                else:
-                    name = '_'.join(name) + "_" + str(new_extent) + ".tiff"
-                if npy:
-                    np.save(os.path.join(paths.clipped_imgs, name), patch)
-                else:
-                    plt.imsave(os.path.join(paths.clipped_imgs, name), patch)
-
-'''
-
 def tif_to_npy():
     count = 0
 
@@ -131,51 +54,6 @@ def tif_to_npy():
         count += 1
     print('Saved ' + str(count) + ' images to ' + paths.npy_dir)
 
-
-'''def csv_to_npy(csv_path, working_dir):
-    fn = os.path.splitext(csv_path)[0]
-    label_df = pd.read_excel(fn+'.xlsx', header=0)
-    np.save(fn + '.npy', label_df)
-    print(fn)
-
-    task = os.path.basename(fn)
-    fp = os.path.join(working_dir, 'labels', task + '_columns.npy')
-    print(fp)
-    np.save(fp, list(label_df.columns))
-
-    print(f'Converted {fn} to .npy')
-'''
-
-'''
-def clip_extent(npy):
-    if npy:
-        img_names = glob.glob(paths.imgs_to_clip + "*.npy")
-    else:
-        img_names = glob.glob(paths.imgs_to_clip + "*.tif")
-
-    # Clip and save images
-    clip_img(img_names, bands, patch_size=args.extent, patch_per_img=1,  # patch size 200 = 2km x 2km
-             centered=True, save=True, verbose=True, npy=npy)
-
-    print("Finished.")
-
-
-def resize_img(img_path, dim_x, dim_y):
-    # get name of all images in img_path
-    if dim_x == dim_y:
-        outptut_path = img_path + '_' + str(dim_x)
-    else:
-        outptut_path = img_path + '_' + str(dim_x) + '_' + str(dim_y)
-    if not os.path.exists(outptut_path):
-        os.makedirs(outptut_path)
-
-    imgs = os.listdir(img_path)
-    for img_name in imgs:
-        print(img_name)
-        img = cv2.imread(os.path.join(img_path, img_name), cv2.IMREAD_UNCHANGED)
-        img_resized = cv2.resize(img, dsize=(dim_x, dim_y), interpolation=cv2.INTER_LINEAR)
-        cv2.imwrite(os.path.join(outptut_path, img_name), img_resized)
-'''
 
 # based on https://wandb.ai/sauravmaheshkar/RSNA-MICCAI/reports/How-to-Set-Random-Seeds-in-PyTorch-and-Tensorflow--VmlldzoxMDA2MDQy
 def set_seed(seed: int = 42) -> None:
