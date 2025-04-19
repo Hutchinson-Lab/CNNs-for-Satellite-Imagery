@@ -2,7 +2,7 @@
 #  How Deep is Necessary?
 # Code based on https://github.com/ermongroup/tile2vec
 # ==========================================================
-# Laurel Hopkins
+
 
 import sys
 import yaml
